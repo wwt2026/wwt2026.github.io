@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="utf-8"?>
+<search> 
+  
+    
+    <entry>
+      <title><![CDATA[Android的消息机制]]></title>
+      <url>/2017/10/11/Android%E7%9A%84%E6%B6%88%E6%81%AF%E6%9C%BA%E5%88%B6/</url>
+      <content type="html"><![CDATA[<pre><code>public static void main(String[] args){
+     Process.setArgV0(&quot;&lt;pre-initialized&gt;&quot;);
+     Looper.prepareMainLooper(); //创建消息循环Looper
+
+     ActivityThread thread=new Activitythread();
+     thread.attach(false);
+
+     if(sMainThreadHandler==null){
+          sMainThreadHandler=thread.getHandler(); //UI线程的Handler
+     }
+     AsyncTask.init;
+
+     Looper.loop(); //执行消息循环
+}
+</code></pre><a id="more"></a>
+<blockquote>
+<p>首先一个应用程序就是一个进程，Android中首先会在main函数中创建一个主线程，并且通过prepareMainLooper创建消息循环Looper，并且保存在sThreadLocal中，然后通过Looper.Loop()执行消息循环。（Looper中封装了消息队列，应用会一直从消息队列中读取、处理消息。）</p>
+</blockquote>
+<pre><code>public static void prepareMainLooper（）{ //设置UI线程的     Looper
+   prepare();
+   setMainLooper(myLooper());
+   myLooper().mQueue.mQuitAllowed=false;
+}                                                                          。
+
+public static void prepare(){  //为当前线程设置Looper
+   if(sThreadLocal.get()!=null){
+        throw new RuntimeException(&quot;only one Looper may be create per thread&quot;)
+ }
+   sThreadLocal.set(new Looper());
+}
+
+
+public static void loop（）{ //执行消息循环
+   Looper me =myLooper();
+   if(me==null){
+       throw new RuntimeException(&quot;No Looper;Looper.prepare()wasn&apos;t called on this thread.&quot;)
+}
+   MessageQueue queue=me.mQueue; // 1、获取消息队列
+
+   while(true){  //2、死循环，即消息循环
+     Message msg =queue.next(); // 3、获取消息
+     if（msg!=null）{
+        if(mag.target==null){
+            return;
+         }
+
+   msg.target.dispatchMessage(msg); // 4、处理消息
+
+   msg.recycle(); // 5、回收消息
+    }
+  }
+}
+</code></pre><blockquote>
+<p>Handler关联一个消息队列，消息队列封装在Looper中，而Looper又会关联一个线程，最终每个消息队列都会关联一个线程。Handler就是一个消息处理器，将消息投递给消息队列，然后再由对应线程从消息队列中逐个取出消息执行。默认情况下只有主线程的消息队列。</p>
+</blockquote>
+<pre><code>Public Handler(){
+   mLooper=Looper.myLooper();  //获取Looper
+   if(mLooper==null){
+        throw new RuntimeException(
+            can&apos;t create handler inside thread that has not called Looper.prepare&quot;);
+   }
+   mQueue=mLooper.mQueue;  //获取消息队列
+   mCallback=null;
+
+}
+</code></pre><blockquote>
+<p>Handler的默认构造函数如上，Handler通过myLooper()获取Looper对象，也就可以调用mQueue()获取消息队列。</p>
+</blockquote>
+<pre><code>public static Looper myLooper(){ 
+    return sThreadLocal.get();  //从线程中获取绑定的Looper对象
+}
+
+
+public final class Message implement Parcelable{
+   Handler target;  
+   Runnable callback;  //Runnable类型的callback
+   Message next; //下一条消息，消息队列是链式存储的
+}
+
+public void handlerMessage(Message msg){ //消息处理函数，子类复写（在不使用post的情况下）
+}
+
+private final void handleCallback（Message message）{
+   message.callback.run(); //这里的callback就是post里的Runnable
+}
+
+public void dispatchMessage(Message msg){ //消息分发
+   if(msg.callback!=null){  // 调用了post（Runnable callback）
+   handleCallback(msg);
+}
+   else{
+    if（mCallback！=null）{
+       if(mCallback.handleMessage(msg)){
+           return;
+        }
+     }
+   }
+}
+</code></pre><blockquote>
+<p>post(Runnable r)和sendMessage的具体实现：</p>
+</blockquote>
+<pre><code>public final boolean post（Runnable r）{
+    return sendMessageDelayed(getPostMessage(r),0);
+}
+
+public final boolean sendMessage(Message msg){
+    return sendMessageDelayed(msg,0);
+}
+
+private final Message getPostMessage(Runnable r){
+    Message m=Message.obtain();
+    m.callback=r;
+    return m;
+}
+
+public final boolean sendMessageDelayed(Message msg,long delayMillis){
+    if(delayMillis&lt;0){
+      delayMillis=0;
+    }
+    return sendMessageAtTime(msg,SystemClock.uptimeMillis()+delayMillis);
+}
+
+public boolean sendMessageAtTime(Message msg,long    uptimeMillis){
+    boolean sent =false;
+    MessageQueue queue= mQueue;
+    if(queue!=null){
+        msg.target=this; // 设置消息的target为当前的Handler对象
+        sent=queue.enqueueMessage(msg,uptimeMillis); // 将消息插入消息队列
+      }
+      else{ //略
+        }
+    return sent;
+}
+</code></pre><blockquote>
+<p>简单来说，不管post一个Runnable还是Message，都会调用sendMessageDelayed(msg,time)方法。Handler最终将消息追加到MessageQueue中，而Looper不断的从MessageQueue中读取消息，并且调用Handler的dispatchMessage方法，这样消息就可以源源不断的产生、添加到MessageQueue、被Handler处理，Android应用就运转起来了。</p>
+<p>android的消息机制主要指Handler的运行机制，Handler的运行需要底层的MessageQueue和Looper支持，MessageQueue就是消息队列，它内部存储了一组消息，以队列的形式对外提供插入和删除的操作，不过其内部的存储结构是链表，Looper是消息循环，由于MessageQueue只是一个消息的存储单元，不能去处理消息，Looper就可以填补这个功能，Looper会以无限循环的方式去查找是否有新消息，如果有消息就处理，否则就等待。</p>
+</blockquote>
+]]></content>
+      
+        
+        <tags>
+            
+            <tag> 消息 </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
+      <title><![CDATA[Hello World]]></title>
+      <url>/2017/10/11/hello-world/</url>
+      <content type="html"><![CDATA[<p>Welcome to <a href="https://hexo.io/" target="_blank" rel="external">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="external">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="external">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="external">GitHub</a>.</p>
+<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo new <span class="string">"My New Post"</span></div></pre></td></tr></table></figure>
+<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="external">Writing</a></p>
+<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo server</div></pre></td></tr></table></figure>
+<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="external">Server</a></p>
+<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo generate</div></pre></td></tr></table></figure>
+<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="external">Generating</a></p>
+<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo deploy</div></pre></td></tr></table></figure>
+<p>More info: <a href="https://hexo.io/docs/deployment.html" target="_blank" rel="external">Deployment</a></p>
+]]></content>
+      
+        
+    </entry>
+    
+  
+  
+</search>
