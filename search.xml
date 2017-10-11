@@ -3,6 +3,58 @@
   
     
     <entry>
+      <title><![CDATA[ThreadLocal]]></title>
+      <url>/2017/10/11/ThreadLocal/</url>
+      <content type="html"><![CDATA[<blockquote>
+<p>Handler在创建过程中会采用当前线程的Looper来构造消息循环，就是通过ThreadLocal来获取。</p>
+<p>ThreadLocal的作用是可以在每个线程中存储数据，并且互不干扰。ThreadLocal是线程内部的数据存储类，通过它可以在指定的线程存储数据，并且只有在指定线程中可以获取到数据，其它线程无法获得数据。一般来说当某些数据是以线程为作用域，并且不同线程具有不同的数据副本的时候，就可以考虑采用ThreadLocal。</p>
+</blockquote>
+<a id="more"></a>
+<blockquote>
+<p>具体到Handler来说，它需要获取当前线程的Looper，很显然Looper的作用域是线程并且每个线程的Looper都不一样，这时通过ThreadLocal就可以轻松的实现Looper在线程的存取。</p>
+</blockquote>
+<p><strong>简单举例</strong></p>
+<pre><code>private ThreadLocal&lt;Boolean&gt; mBooleanThreadLocal = new ThreadLocal&lt;Boolean&gt;();
+
+ //分别在主线程、子线程1、子线程2中设置和访问它的值
+
+mBooleanThreadLocal.set(True);
+
+new Thread(&quot;Thread#1&quot;) {  
+    @Override  
+    public void run() {  
+       mBooleanThreadLocal.set(false);  
+       Log.d(TAG, &quot;[Thread#1]mBooleanThreadLocal=&quot; + mBooleanThreadLocal.get());  
+};  
+}.start();  
+
+    new Thread(&quot;Thread#2&quot;) {  
+    @Override  
+    public void run() {  
+       Log.d(TAG, &quot;[Thread#2]mBooleanThreadLocal=&quot; + mBooleanThreadLocal.get());  
+};  
+}.start();  
+
+//打印如下
+
+D/TestActivity(8676):[Thread#main]mBooleanThreadLocal=true
+D/TestActivity(8676):[Thread#1]mBooleanThreadLocal=false
+D/TestActivity(8676):[Thread#2]mBooleanThreadLocal=null
+</code></pre><blockquote>
+<p>从上可看到，虽然在不同线程中访问的是同一个ThreadLocal对象，但他们获取到的值是不一样的。原因是不同线程访问同一个ThreadLocal的get方法，ThreadLocal内部会从各自的线程中取出一个数组。</p>
+</blockquote>
+]]></content>
+      
+        
+        <tags>
+            
+            <tag> 线程 </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
       <title><![CDATA[Android的消息机制]]></title>
       <url>/2017/10/11/Android%E7%9A%84%E6%B6%88%E6%81%AF%E6%9C%BA%E5%88%B6/</url>
       <content type="html"><![CDATA[<pre><code>public static void main(String[] args){
