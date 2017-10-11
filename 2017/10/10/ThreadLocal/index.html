@@ -14,17 +14,19 @@
 <meta name="author" content="wwt" />
 
 
-    
-    
 
-
-<meta property="og:type" content="website">
-<meta property="og:title" content="wwt">
-<meta property="og:url" content="http://yoursite.com/index.html">
+<meta name="description" content="Handler在创建过程中会采用当前线程的Looper来构造消息循环，就是通过ThreadLocal来获取。 ThreadLocal的作用是可以在每个线程中存储数据，并且互不干扰。ThreadLocal是线程内部的数据存储类，通过它可以在指定的线程存储数据，并且只有在指定线程中可以获取到数据，其它线程无法获得数据。一般来说当某些数据是以线程为作用域，并且不同线程具有不同的数据副本的时候，就可以考">
+<meta name="keywords" content="线程">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ThreadLocal">
+<meta property="og:url" content="http://yoursite.com/2017/10/10/ThreadLocal/index.html">
 <meta property="og:site_name" content="wwt">
+<meta property="og:description" content="Handler在创建过程中会采用当前线程的Looper来构造消息循环，就是通过ThreadLocal来获取。 ThreadLocal的作用是可以在每个线程中存储数据，并且互不干扰。ThreadLocal是线程内部的数据存储类，通过它可以在指定的线程存储数据，并且只有在指定线程中可以获取到数据，其它线程无法获得数据。一般来说当某些数据是以线程为作用域，并且不同线程具有不同的数据副本的时候，就可以考">
 <meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2017-10-11T06:40:34.395Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="wwt">
+<meta name="twitter:title" content="ThreadLocal">
+<meta name="twitter:description" content="Handler在创建过程中会采用当前线程的Looper来构造消息循环，就是通过ThreadLocal来获取。 ThreadLocal的作用是可以在每个线程中存储数据，并且互不干扰。ThreadLocal是线程内部的数据存储类，通过它可以在指定的线程存储数据，并且只有在指定线程中可以获取到数据，其它线程无法获得数据。一般来说当某些数据是以线程为作用域，并且不同线程具有不同的数据副本的时候，就可以考">
 
 <link rel="apple-touch-icon" href= "/apple-touch-icon.png">
 
@@ -52,13 +54,11 @@
 <link rel="stylesheet" href="/css/style.css">
 
 
-    <style> .article { opacity: 0;} </style>
-
 
 <link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
 
 
-<title>wwt</title>
+<title>ThreadLocal | wwt</title>
 
 <script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
 <script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
@@ -67,8 +67,8 @@
     var yiliaConfig = {
         fancybox: true,
         animate: true,
-        isHome: true,
-        isPost: false,
+        isHome: false,
+        isPost: true,
         isArchive: false,
         isTag: false,
         isCategory: false,
@@ -221,151 +221,7 @@
     </div>
     <link class="menu-list" tags="标签" friends="友情链接" about="关于我"/>
 </nav>
-      <div class="body-wrap">
-  
-    <article id="post-Android的消息机制" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2017/10/11/Android的消息机制/" class="article-date">
-      <time datetime="2017-10-11T02:41:53.758Z" itemprop="datePublished">2017-10-11</time>
-</a>
-
-
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/10/11/Android的消息机制/">Android的消息机制</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-          
-              <pre><code>public static void main(String[] args){
-     Process.setArgV0(&quot;&lt;pre-initialized&gt;&quot;);
-     Looper.prepareMainLooper(); //创建消息循环Looper
-
-     ActivityThread thread=new Activitythread();
-     thread.attach(false);
-
-     if(sMainThreadHandler==null){
-          sMainThreadHandler=thread.getHandler(); //UI线程的Handler
-     }
-     AsyncTask.init;
-
-     Looper.loop(); //执行消息循环
-}
-</code></pre>
-          
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-
-      
-    <div class="article-tag tagcloud">
-        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/消息/">消息</a></li></ul>
-    </div>
-
-      
-        <p class="article-more-link">
-          <a href="/2017/10/11/Android的消息机制/#more">阅读全文 >></a>
-        </p>
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-
-
-  
-    <article id="post-hello-world" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2017/10/11/hello-world/" class="article-date">
-      <time datetime="2017-10-11T02:33:43.328Z" itemprop="datePublished">2017-10-11</time>
-</a>
-
-
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/10/11/hello-world/">Hello World</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-          
-        <p>Welcome to <a href="https://hexo.io/" target="_blank" rel="external">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="external">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="external">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="external">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo new <span class="string">"My New Post"</span></div></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="external">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo server</div></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="external">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo generate</div></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="external">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo deploy</div></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/deployment.html" target="_blank" rel="external">Deployment</a></p>
-
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-
-      
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-
-
-  
-    <article id="post-ThreadLocal" class="article article-type-post" itemscope itemprop="blogPost">
+      <div class="body-wrap"><article id="post-ThreadLocal" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
       <a href="/2017/10/10/ThreadLocal/" class="article-date">
@@ -383,46 +239,149 @@
       <header class="article-header">
         
   
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/10/10/ThreadLocal/">ThreadLocal</a>
+    <h1 class="article-title" itemprop="name">
+      ThreadLocal
     </h1>
   
 
       </header>
       
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-          
-              <blockquote>
-<p>Handler在创建过程中会采用当前线程的Looper来构造消息循环，就是通过ThreadLocal来获取。</p>
-<p>ThreadLocal的作用是可以在每个线程中存储数据，并且互不干扰。ThreadLocal是线程内部的数据存储类，通过它可以在指定的线程存储数据，并且只有在指定线程中可以获取到数据，其它线程无法获得数据。一般来说当某些数据是以线程为作用域，并且不同线程具有不同的数据副本的时候，就可以考虑采用ThreadLocal。</p>
-</blockquote>
-          
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
+      <div class="article-info article-info-post">
+        
 
-      
+        
     <div class="article-tag tagcloud">
         <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/线程/">线程</a></li></ul>
     </div>
 
+        <div class="clearfix"></div>
+      </div>
       
-        <p class="article-more-link">
-          <a href="/2017/10/10/ThreadLocal/#more">阅读全文 >></a>
-        </p>
+    
+    <div class="article-entry" itemprop="articleBody">
       
-      <div class="clearfix"></div>
+          
+        <blockquote>
+<p>Handler在创建过程中会采用当前线程的Looper来构造消息循环，就是通过ThreadLocal来获取。</p>
+<p>ThreadLocal的作用是可以在每个线程中存储数据，并且互不干扰。ThreadLocal是线程内部的数据存储类，通过它可以在指定的线程存储数据，并且只有在指定线程中可以获取到数据，其它线程无法获得数据。一般来说当某些数据是以线程为作用域，并且不同线程具有不同的数据副本的时候，就可以考虑采用ThreadLocal。</p>
+</blockquote>
+<a id="more"></a>
+<blockquote>
+<p>具体到Handler来说，它需要获取当前线程的Looper，很显然Looper的作用域是线程并且每个线程的Looper都不一样，这时通过ThreadLocal就可以轻松的实现Looper在线程的存取。</p>
+</blockquote>
+<p><strong>简单举例</strong></p>
+<pre><code>private ThreadLocal&lt;Boolean&gt; mBooleanThreadLocal = new ThreadLocal&lt;Boolean&gt;();
+
+ //分别在主线程、子线程1、子线程2中设置和访问它的值
+
+mBooleanThreadLocal.set(True);
+
+new Thread(&quot;Thread#1&quot;) {  
+    @Override  
+    public void run() {  
+       mBooleanThreadLocal.set(false);  
+       Log.d(TAG, &quot;[Thread#1]mBooleanThreadLocal=&quot; + mBooleanThreadLocal.get());  
+};  
+}.start();  
+
+    new Thread(&quot;Thread#2&quot;) {  
+    @Override  
+    public void run() {  
+       Log.d(TAG, &quot;[Thread#2]mBooleanThreadLocal=&quot; + mBooleanThreadLocal.get());  
+};  
+}.start();  
+
+//打印如下
+
+D/TestActivity(8676):[Thread#main]mBooleanThreadLocal=true
+D/TestActivity(8676):[Thread#1]mBooleanThreadLocal=false
+D/TestActivity(8676):[Thread#2]mBooleanThreadLocal=null
+</code></pre><blockquote>
+<p>从上可看到，虽然在不同线程中访问的是同一个ThreadLocal对象，但他们获取到的值是不一样的。原因是不同线程访问同一个ThreadLocal的get方法，ThreadLocal内部会从各自的线程中取出一个数组。</p>
+</blockquote>
+
+      
     </div>
     
   </div>
   
+    
+    <div class="copyright">
+        <p><span>本文标题:</span><a href="/2017/10/10/ThreadLocal/">ThreadLocal</a></p>
+        <p><span>文章作者:</span><a href="/" title="回到主页">wwt</a></p>
+        <p><span>发布时间:</span>2017-10-10, 08:55:29</p>
+        <p><span>最后更新:</span>2017-10-11, 14:40:34</p>
+        <p>
+            <span>原始链接:</span><a class="post-url" href="/2017/10/10/ThreadLocal/" title="ThreadLocal">http://yoursite.com/2017/10/10/ThreadLocal/</a>
+            <span class="copy-path" data-clipboard-text="原文: http://yoursite.com/2017/10/10/ThreadLocal/　　作者: wwt" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <script> var clipboard = new Clipboard('.copy-path'); </script>
+        </p>
+        <p>
+            <span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" title="CC BY-NC-SA 4.0 International" target = "_blank">"署名-非商用-相同方式共享 4.0"</a> 转载请保留原文链接及作者。
+        </p>
+    </div>
+
+
+
+    <nav id="article-nav">
+        
+            <div id="article-nav-newer" class="article-nav-title">
+                <a href="/2017/10/11/hello-world/">
+                    Hello World
+                </a>
+            </div>
+        
+        
+    </nav>
+
+  
 </article>
 
+    <div id="toc" class="toc-article">
+        <strong class="toc-title">文章目录</strong>
+        
+            
+        
+    </div>
+    <style>
+        .left-col .switch-btn,
+        .left-col .switch-area {
+            display: none;
+        }
+        .toc-level-3 i,
+        .toc-level-3 ol {
+            display: none !important;
+        }
+    </style>
+
+    <input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
+
+    <script>
+        yiliaConfig.toc = ["隐藏目录", "显示目录", !!"false"];
+    </script>
+
+
+
+    
+<div class="share">
+    
+        <div class="bdsharebuttonbox">
+            <a href="#" class="fa fa-twitter bds_twi" data-cmd="twi" title="分享到推特"></a>
+            <a href="#" class="fa fa-weibo bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+            <a href="#" class="fa fa-qq bds_sqq" data-cmd="sqq" title="分享给 QQ 好友"></a>
+            <a href="#" class="fa fa-files-o bds_copy" data-cmd="copy" title="复制网址"></a>
+            <a href="#" class="fa fa fa-envelope-o bds_mail" data-cmd="mail" title="通过邮件分享"></a>
+            <a href="#" class="fa fa-weixin bds_weixin" data-cmd="weixin" title="生成文章二维码"></a>
+            <a href="#" class="fa fa-share-alt bds_more" data-cmd="more"></i></a>
+        </div>
+        <script>
+            window._bd_share_config={
+                "common":{"bdSnsKey":{},"bdText":"ThreadLocal　| wwt　","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+        </script>
+    
+
+    
+</div>
 
 
 
@@ -430,9 +389,33 @@
 
 
 
+    
 
-  
-  
+
+
+
+    <div class="scroll" id="post-nav-button">
+        
+            <a href="/2017/10/11/hello-world/" title="上一篇: Hello World">
+                <i class="fa fa-angle-left"></i>
+            </a>
+        
+
+        <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+
+        
+            <a href="/" title="回到主页"><i class="fa fa-home"></i></a>
+        
+    </div>
+
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2017/10/11/Android的消息机制/">Android的消息机制</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/10/11/hello-world/">Hello World</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/10/10/ThreadLocal/">ThreadLocal</a></li></ul>
+
+
+
+
+    <script>
+        
+    </script>
 </div>
       <footer id="footer">
     <div class="outer">
